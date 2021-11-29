@@ -24,7 +24,7 @@ if (fs.existsSync("data")) {
 }
 
 const requestListener = function (req, res) {
-  log(req.url)
+  if (req.url!=="/favicon.ico") log(req.url)
   if (req.url === "/test"){
   fs.readFile("templates/rick.html", function (err,data) {
       if (err) {
