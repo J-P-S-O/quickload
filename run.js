@@ -28,22 +28,53 @@ const requestListener = function (req, res) {
   if (req.url === "/test"){
   fs.readFile("templates/rick.html", function (err,data) {
       if (err) {
-        res.writeHead(404);
-        res.end(JSON.stringify(err));
+        res.writeHead(203);
+        res.end("<html><body><b>internal error</b></body></html>"+JSON.stringify(err));
         return;
       }
       res.writeHead(200);
       res.end(data);
     });
   }else if (req.url === "/"){
-         
-  }else {
+         //template stuff
+         res.writeHead(200)
+         res.end("N/A")
+  }else if(req.url.includes("/../")) {
+    fs.readFile("templates/500.html", function (err,data) {
+      if (err) {
+        res.writeHead(203);
+        res.end("<html><body><b>internal error</b></body></html>"+JSON.stringify(err));
+        return;
+      }
+      res.writeHead(200);
+      res.end(data);
+    });
+
+  } else {
     fs.readFile("static" + req.url, function (err,data) {
       if (err) {
-        res.writeHead(404);
+        
+        if(err.code=="ENOENT"){
+          
+          fs.readFile("templates/404.html", function (err,data) {
+            if (err) {
+              res.writeHead(203);
+              res.end("<html><body><b>internal error</b></body></html>"+JSON.stringify(err));
+              return;
+            }
+            
+            res.writeHead(404);
+            res.end(data);
+            return;
+          })
+          return;
+        }
+
+        res.writeHead(203);
         res.end(JSON.stringify(err));
         return;
       }
+      
       res.writeHead(200);
       res.end(data);
     });
