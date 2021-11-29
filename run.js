@@ -25,7 +25,29 @@ if (fs.existsSync("data")) {
 
 const requestListener = function (req, res) {
   log(req.url)
-  
+  if (req.url === "/test"){
+  fs.readFile("templates/rick.html", function (err,data) {
+      if (err) {
+        res.writeHead(404);
+        res.end(JSON.stringify(err));
+        return;
+      }
+      res.writeHead(200);
+      res.end(data);
+    });
+  }else if (req.url === "/"){
+         
+  }else {
+    fs.readFile("static" + req.url, function (err,data) {
+      if (err) {
+        res.writeHead(404);
+        res.end(JSON.stringify(err));
+        return;
+      }
+      res.writeHead(200);
+      res.end(data);
+    });
+  }
 }
 
 const server = http.createServer(requestListener);
