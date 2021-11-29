@@ -1,0 +1,12 @@
+body {
+    font-size: 80px;
+    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    align-items: center;
+    background-color: black;
+    color: white;
+    align-items: center;
+  }
+p {
+  vertical-align: middle;
+  text-align: center;
+}

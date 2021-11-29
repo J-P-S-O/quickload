@@ -36,9 +36,15 @@ const requestListener = function (req, res) {
       res.end(data);
     });
   }else if (req.url === "/"){
-         //template stuff
-         res.writeHead(200)
-         res.end("N/A")
+    fs.readFile("templates/start.html", function (err,data) {
+      if (err) {
+        res.writeHead(203);
+        res.end("<html><body><b>internal error</b></body></html>"+JSON.stringify(err));
+        return;
+      }
+      res.writeHead(200);
+      res.end(data);
+    });
   }else if(req.url.includes("/../")) {
     fs.readFile("templates/500.html", function (err,data) {
       if (err) {
