@@ -7,7 +7,7 @@ let http = require("http")
 let crypto = require("crypto")
 
 if (fs.existsSync("data")) { 
-    console.log("WARNING: Folder \"data\" will be erased and rebuilt if you proceed")
+    console.log("\x1b[31m WARNING: Folder \"data\" will be erased and rebuilt if you proceed \x1b[37m")
     const answer = prompt("Would you like to proceed? (S/N)")
     if (answer.toUpperCase() =="S"){
       log("removing")
@@ -48,8 +48,11 @@ const requestListener = function (req, res) {
       }
       let upc = crypto.randomBytes(16).toString("base64")
       let dc = crypto.randomBytes(16).toString("base64")
-      data.replace("\\code2",dc) // error lol
-      data.replace("\\code",upc)
+      
+      data = data.toString().replace("\\\\code2",dc) // error lol
+      data = data.toString().replace("\\\\code",upc)
+      log(dc)
+      log(upc)
       fs.writeFileSync
       res.writeHead(200);
       res.end(data);
