@@ -4,6 +4,7 @@ let path = require("path")
 let fs = require("fs")
 let log = console.log;
 let http = require("http")
+let crypto = require("crypto")
 
 if (fs.existsSync("data")) { 
     console.log("WARNING: Folder \"data\" will be erased and rebuilt if you proceed")
@@ -22,6 +23,9 @@ if (fs.existsSync("data")) {
       process.exit(1)
     }
 }
+
+fs.mkdirSync("./data");
+fs.mkdirSync("./data/keys")
 
 const requestListener = function (req, res) {
   if (req.url!=="/favicon.ico") log(req.url)
@@ -42,6 +46,11 @@ const requestListener = function (req, res) {
         res.end("<html><body><b>internal error</b></body></html>"+JSON.stringify(err));
         return;
       }
+      let upc = crypto.randomBytes(16).toString("base64")
+      let dc = crypto.randomBytes(16).toString("base64")
+      data.replace("\\code2",dc) // error lol
+      data.replace("\\code",upc)
+      fs.writeFileSync
       res.writeHead(200);
       res.end(data);
     });
