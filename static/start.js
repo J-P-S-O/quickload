@@ -12,4 +12,9 @@ dbutton.onclick =function(){
     if (frame.src != "downframe.html") frame.src = "downframe.html"
     window.document.title = "Download something"
 }
+frame.onload = function(){
+    if (frame.src === "uploadframe.html"){
+        document.getElementById("iframeid").contentWindow.code = upcode;
+    }
+}
 }
