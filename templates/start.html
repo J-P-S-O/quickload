@@ -10,7 +10,7 @@
 <link rel="stylesheet" type="text/css" href="style.css" />
 </head>
 <style>
-  button {
+  .dum button {
   height: 10%;
    background-color: black;
    color: white;
@@ -28,7 +28,10 @@
   <div height = 5%></div>
   
     <input type="text" name="Code" size="15">  <button id = "downb">Download file</button></br>
-    <button id = "upb">Upload file</button>
+    <form action="/upload">
+      <input type="file" id="form" name="filename">
+      <input class = "dum" type="submit">
+    </form>
  
   <script src = "start.js"></script>
   

@@ -2,14 +2,14 @@ nav {
    
    position: fixed;
    top: 0%;
-   height: 10%;
+   height: 50%;
    width: 100%;
    text-align: center;
    vertical-align: top;
    };
 .eviloctopus {
-   height: 10%;
-   text-align:left;
+   height: 100%;
+   text-align:center;
    position: fixed;
    top: 0%;
    
