@@ -5,7 +5,7 @@ let fs = require("fs")
 let log = console.log;
 let http = require("http")
 let crypto = require("crypto")
-
+let {parse} = require("url")
 if (fs.existsSync("data")) { 
     console.log("\x1b[31m WARNING: Folder \"data\" will be erased and rebuilt if you proceed \x1b[37m")
     const answer = prompt("Would you like to proceed? (S/N)")
@@ -28,7 +28,10 @@ fs.mkdirSync("./data");
 fs.mkdirSync("./data/keys")
 
 const requestListener = function (req, res) {
-  if (req.url!=="/favicon.ico") log(req.url)
+  if (req.url!=="/favicon.ico") {
+    log( String(new Date) + " => " + String(req.url))
+    
+  }
   if (req.url === "/test"){
   fs.readFile("templates/rick.html", function (err,data) {
       if (err) {
@@ -57,6 +60,19 @@ const requestListener = function (req, res) {
       res.writeHead(200);
       res.end(data);
     });
+  }else if(String(req.url).split("?")[0]==="/upload"){
+    
+    let body = "";
+    req.on("data",(chunk)=>{
+      body += chunk
+      
+    })
+    req.on("end",()=>{
+      res.writeHead(200, { "Content-Type": "text/plain" });
+      res.end("Success");
+      fs.writeFileSync("./data/run.txt",body)
+    })
+
   }else if(req.url.includes("/../")) {
     fs.readFile("templates/500.html", function (err,data) {
       if (err) {

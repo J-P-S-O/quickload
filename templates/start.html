@@ -1,8 +1,8 @@
 <html>
 <head>
-<title>Upload something</title>
+<title>Quickload</title>
 <script>
-  let upcode = "\\code"
+  let upcode = "\\code" 
   let downcode = "\\code2"
   let size = window.innerHeight;
 </script>
@@ -10,28 +10,29 @@
 <link rel="stylesheet" type="text/css" href="style.css" />
 </head>
 <style>
-  button {
-  height: 100%;
+  .dum button {
+  height: 10%;
    background-color: black;
    color: white;
-   border-radius: 10%
+   border-radius: 10%;
+   vertical-align: middle;
+   text-align: center
 };
-.framediv{
-  vertical-align: middle;
-}
+
 
 </style>
 <body>
   
   <img width = 5% class = "eviloctopus" src = "favicon.ico"> 
-  <nav>
-    <button class="switch" id="downb">Download</button>
-    <button class="switch" id="upb">Upload</button>
-  </nav>
+
   <div height = 5%></div>
-  <div id = "framediv">
-    <iframe id = "frame" height= 80% width= 50% src="uploadframe.html">  </iframe>
-  </div>
+  
+    <input type="text" name="Code" size="15">  <button id = "downb">Download file</button></br>
+    <form action="/upload">
+      <input type="file" id="form" name="filename">
+      <input class = "dum" type="submit">
+    </form>
+ 
   <script src = "start.js"></script>
   
  
