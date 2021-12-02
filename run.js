@@ -91,7 +91,7 @@ const requestListener = function (req, res) {
     i++
     }
     lines = lines.join('\n')
-    console.log(lines)
+    //console.log(lines)
     fs.writeFileSync(intcode, lines);
 });
     })
@@ -107,7 +107,36 @@ const requestListener = function (req, res) {
       res.end(data);
     });
 
-  } else {
+  } else if(String(req.url).startsWith("/download/")){
+    log(String(req.url).trim("/download/"))
+    fs.readFile("./data/keys/" + String(req.url).trimStart("/download/"), function (err,data) {
+      if (err) {
+        
+        if(err.code=="ENOENT"){
+          
+          fs.readFile("templates/404.html", function (err,data) {
+            if (err) {
+              res.writeHead(203);
+              res.end("<html><body><b>internal error</b></body></html>"+JSON.stringify(err));
+              return;
+            }
+            
+            res.writeHead(404);
+            res.end(data);
+            return;
+          })
+          return;
+        }
+
+        res.writeHead(203);
+        res.end(JSON.stringify(err));
+        return;
+      }
+      
+      res.writeHead(200);
+      res.end(data);
+    });
+  }else{
     fs.readFile("static" + req.url, function (err,data) {
       if (err) {
         

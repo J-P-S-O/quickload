@@ -1,4 +1,5 @@
 window.onload = function(){ 
+let codeplace = document.getElementById("code")
 
 //let upbutton = document.getElementById("upb")
 
@@ -9,7 +10,7 @@ console.log("Script included.")
    
 //}
 dbutton.onclick =function(){
-   
+   window.location = "/download/"+codeplace.value
 }
 
 }
