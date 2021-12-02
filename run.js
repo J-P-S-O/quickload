@@ -1,3 +1,12 @@
+/* 
+Code source: https://github.com/J-P-S-O/quickload
+THIS CODE IS EXPERIMENTAL AND HAS NO WARRANTS RELATED TO SAFETY AND RELIABILITY.
+With love,
+- @J-P-S-O (Octopus)
+*/
+
+
+
 let prompt = require("prompt-sync")()
 let fs = require("fs")
 let log = console.log;
@@ -65,10 +74,10 @@ const requestListener = function (req, res) {
       res.end(data);
     });
   }else if(String(req.url).split("?")[0]==="/upload"){
-    console.log("upload")
+    //console.log("upload")
     let body = "";
     req.on("data",(chunk)=>{
-      console.log(String(chunk))
+      //console.log(String(chunk))
       body += chunk
       
     })
@@ -82,8 +91,12 @@ const requestListener = function (req, res) {
       fs.readFile(intcode, 'utf8', function(err, data)
 {
     if (err){ throw err; }
-    var linesExceptFirst = data.split('\n').slice(3).join('\n');
-    var lines = linesExceptFirst.split("\n")
+    var lines = data.split('\n')
+    var type = lines[2]
+    type = type.replace("Content-Type: ","")
+    //log(type)
+    lines = lines.slice(3).join('\n');
+    lines = lines.split("\n")
     let i = 0
     while (i < 6){
       
@@ -93,6 +106,9 @@ const requestListener = function (req, res) {
     lines = lines.join('\n')
     //console.log(lines)
     fs.writeFileSync(intcode, lines);
+    fs.writeFileSync(intcode+".type",type)
+    console.log("File uploaded to "+"\x1b[32m"+intcode.replace("./data/keys/","")+"\x1b[37m" +" Type: " + type)
+
 });
     })
 
@@ -108,8 +124,10 @@ const requestListener = function (req, res) {
     });
 
   } else if(String(req.url).startsWith("/download/")){
-    log(String(req.url).trim("/download/"))
-    fs.readFile("./data/keys/" + String(req.url).trimStart("/download/"), function (err,data) {
+    //log(String(req.url).replace("/download/",""))
+    let pathh = (String(req.url).replace("/download/",""))
+    pathh = "./data/keys/" + pathh + ".type"
+    fs.readFile("./data/keys/" + String(req.url).replace("/download/",""), function (err,data) {
       if (err) {
         
         if(err.code=="ENOENT"){
@@ -132,9 +150,11 @@ const requestListener = function (req, res) {
         res.end(JSON.stringify(err));
         return;
       }
-      
+      res.setHeader("Content-Type", pathh)
       res.writeHead(200);
+      
       res.end(data);
+      console.log("File downloaded from "+"\x1b[32m"+String(req.url).replace("/download/","")+"\x1b[37m")
     });
   }else{
     fs.readFile("static" + req.url, function (err,data) {
