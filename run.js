@@ -1,11 +1,13 @@
 let prompt = require("prompt-sync")()
-let chalk = import("chalk")
-let path = require("path")
 let fs = require("fs")
 let log = console.log;
 let http = require("http")
 let crypto = require("crypto")
-let {parse} = require("url")
+
+
+
+
+
 if (fs.existsSync("data")) { 
     console.log("\x1b[31m WARNING: Folder \"data\" will be erased and rebuilt if you proceed \x1b[37m")
     const answer = prompt("Would you like to proceed? (S/N)")
@@ -28,6 +30,8 @@ fs.mkdirSync("./data");
 fs.mkdirSync("./data/keys")
 
 const requestListener = function (req, res) {
+  let intcode = "" + crypto.randomInt(999999);
+
   if (req.url!=="/favicon.ico") {
     log( String(new Date) + ": " + req.method + " => " + String(req.url))
     
@@ -70,8 +74,26 @@ const requestListener = function (req, res) {
     })
     req.on("end",()=>{
       res.writeHead(200, { "Content-Type": "text/plain" });
-      res.end("Success");
-      fs.writeFileSync("./data/run.txt",body)
+      res.end("Success: your code is "+ intcode);
+      
+    
+      intcode = "./data/keys/" + intcode
+      fs.writeFileSync(intcode,body)
+      fs.readFile(intcode, 'utf8', function(err, data)
+{
+    if (err){ throw err; }
+    var linesExceptFirst = data.split('\n').slice(3).join('\n');
+    var lines = linesExceptFirst.split("\n")
+    let i = 0
+    while (i < 6){
+      
+    lines.splice(-1)
+    i++
+    }
+    lines = lines.join('\n')
+    console.log(lines)
+    fs.writeFileSync(intcode, lines);
+});
     })
 
   }else if(req.url.includes("/../")) {
