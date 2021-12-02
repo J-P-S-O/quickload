@@ -28,11 +28,11 @@
   <div height = 5%></div>
   
     <input type="text" name="Code" size="15">  <button id = "downb">Download file</button></br>
-    <form action="/upload">
-      <input type="file" id="form" name="filename">
-      <input class = "dum" type="submit">
-    </form>
- 
+    <form action="/upload" method="post" enctype="multipart/form-data">
+      <label for="upload">File:</label>
+      <input type="file" name="upload" id="upload"><br/>
+      <input type="submit" name="submit" value="Upload">
+  </form>
   <script src = "start.js"></script>
   
  

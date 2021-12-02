@@ -29,7 +29,7 @@ fs.mkdirSync("./data/keys")
 
 const requestListener = function (req, res) {
   if (req.url!=="/favicon.ico") {
-    log( String(new Date) + " => " + String(req.url))
+    log( String(new Date) + ": " + req.method + " => " + String(req.url))
     
   }
   if (req.url === "/test"){
@@ -54,16 +54,17 @@ const requestListener = function (req, res) {
       
       data = data.toString().replace("\\\\code2",dc) // error lol
       data = data.toString().replace("\\\\code",upc)
-      log(dc)
-      log(upc)
+      //log(dc)
+      //log(upc)
       fs.writeFileSync
       res.writeHead(200);
       res.end(data);
     });
   }else if(String(req.url).split("?")[0]==="/upload"){
-    
+    console.log("upload")
     let body = "";
     req.on("data",(chunk)=>{
+      console.log(String(chunk))
       body += chunk
       
     })
