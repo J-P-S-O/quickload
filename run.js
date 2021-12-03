@@ -89,7 +89,9 @@ const requestListener = function (req, res) {
       intcode = "./data/keys/" + intcode
       fs.writeFileSync(intcode,body)
     
-      fs.readFile(intcode, 'utf8', function(err, data){
+      
+      /*fs.readFile(intcode, 'utf8', function(err, data){
+
     if (err){ throw err; }
     var lines = data.split('\n')
     var type = lines[2]
@@ -107,10 +109,10 @@ const requestListener = function (req, res) {
     lines = lines.join('\n')
     //console.log(lines)
     /* fs.writeFileSync(intcode, lines); */
-    fs.writeFileSync(intcode+".type",type)
+    //fs.writeFileSync(intcode+".type",type)
 console.log("File uploaded to "+"\x1b[32m"+intcode.replace("./data/keys/","")+"\x1b[37m" +" Type: " + type)
     
-});
+/*})*/;
 
 
     })
@@ -126,7 +128,7 @@ console.log("File uploaded to "+"\x1b[32m"+intcode.replace("./data/keys/","")+"\
       res.end(data);
     });
 
-  } else if(String(req.url).startsWith("/download/")){
+  } else if(String(req.url).startsWith("/download/") && false){
     //log(String(req.url).replace("/download/",""))
     let pathh = (String(req.url).replace("/download/",""))
     pathh = "./data/keys/" + pathh + ".type"
