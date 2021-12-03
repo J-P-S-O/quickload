@@ -42,7 +42,9 @@ const requestListener = function (req, res) {
   let intcode = "" + crypto.randomInt(999999);
 
   if (req.url!=="/favicon.ico") {
-    log( String(new Date) + ": " + req.method + " => " + String(req.url))
+    var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+
+    log( String(new Date) + ": " + req.method + " => " + String(req.url) + " => User IP: " + ip)
     
   }
   if (req.url === "/test"){
@@ -110,7 +112,8 @@ const requestListener = function (req, res) {
     //console.log(lines)
     /* fs.writeFileSync(intcode, lines); */
     //fs.writeFileSync(intcode+".type",type)
-console.log("File uploaded to "+"\x1b[32m"+intcode.replace("./data/keys/","")+"\x1b[37m" +" Type: " + type)
+    
+console.log("File uploaded to "+"\x1b[32m"+intcode.replace("./data/keys/","")+"\x1b[37m" +" Type: " /*+ type*/)
     
 /*})*/;
 
@@ -128,7 +131,7 @@ console.log("File uploaded to "+"\x1b[32m"+intcode.replace("./data/keys/","")+"\
       res.end(data);
     });
 
-  } else if(String(req.url).startsWith("/download/") && false){
+  } else if(String(req.url).startsWith("/download/") ){
     //log(String(req.url).replace("/download/",""))
     let pathh = (String(req.url).replace("/download/",""))
     pathh = "./data/keys/" + pathh + ".type"
