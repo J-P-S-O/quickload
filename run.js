@@ -12,7 +12,7 @@ let fs = require("fs")
 let log = console.log;
 let http = require("http")
 let crypto = require("crypto")
-
+const { isText } = require('istextorbinary')
 
 
 
@@ -88,13 +88,14 @@ const requestListener = function (req, res) {
     
       intcode = "./data/keys/" + intcode
       fs.writeFileSync(intcode,body)
-      fs.readFile(intcode, 'utf8', function(err, data)
-{
+    
+      fs.readFile(intcode, 'utf8', function(err, data){
     if (err){ throw err; }
     var lines = data.split('\n')
     var type = lines[2]
     type = type.replace("Content-Type: ","")
     //log(type)
+    
     lines = lines.slice(3).join('\n');
     lines = lines.split("\n")
     let i = 0
@@ -105,11 +106,13 @@ const requestListener = function (req, res) {
     }
     lines = lines.join('\n')
     //console.log(lines)
-    fs.writeFileSync(intcode, lines);
+    /* fs.writeFileSync(intcode, lines); */
     fs.writeFileSync(intcode+".type",type)
-    console.log("File uploaded to "+"\x1b[32m"+intcode.replace("./data/keys/","")+"\x1b[37m" +" Type: " + type)
-
+console.log("File uploaded to "+"\x1b[32m"+intcode.replace("./data/keys/","")+"\x1b[37m" +" Type: " + type)
+    
 });
+
+
     })
 
   }else if(req.url.includes("/../")) {
