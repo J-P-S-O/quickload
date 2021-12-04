@@ -6,23 +6,25 @@ With love,
 */
 
 
-
+let mime = require('mime-types')
 let prompt = require("prompt-sync")()
 let fs = require("fs")
 let log = console.log;
 let http = require("http")
 let crypto = require("crypto")
-const { isText } = require('istextorbinary')
+let path = require("path")
 
 
 
-
-if (fs.existsSync("data")) { 
-    console.log("\x1b[31m WARNING: Folder \"data\" will be erased and rebuilt if you proceed \x1b[37m")
+    console.log("\x1b[31m WARNING: Folder \"data\" will be erased and rebuilt if you proceed \x1b[37m"
+    + "\n~Same will happen for all files in /static/ matching \x1b[34m *.upload.* \x1b[37m")
+    
     const answer = prompt("Would you like to proceed? (S/N)")
     if (answer.toUpperCase() =="S"){
-      log("removing")
+      //log("removing")
+      if(fs.existsSync("data")){
       fs.rmdirSync("data",{recursive: true})
+      }
       console.log("Done!")
       console.log("Now we can start the HTTP server lol")
       
@@ -33,6 +35,15 @@ if (fs.existsSync("data")) {
       console.log("Not a valid answer. Exiting...")
       process.exit(1)
     }
+    
+let filess = fs.readdirSync("./static")
+for (file in filess){
+
+  //console.log(String(filess[file]))
+  if (String(filess[file]).match(/\.*\.upload\.*/)){
+    console.log("Removing "+"\x1b[32m"+ String(filess[file]) + "\x1b[37m")
+     fs.unlinkSync(path.join(__dirname,"static", filess[file]))
+  }
 }
 
 fs.mkdirSync("./data");
@@ -86,34 +97,17 @@ const requestListener = function (req, res) {
     req.on("end",()=>{
       res.writeHead(200, { "Content-Type": "text/plain" });
       res.end("Success: your code is "+ intcode);
-      
-    
-      intcode = "./data/keys/" + intcode
+      //console.log(req.headers)
+      let type = req.headers["content-type"]
+      let ext = mime.extension(type)
+    let code = intcode
+      intcode = "./static/" + intcode+".upload."+ext
       fs.writeFileSync(intcode,body)
-    
+   
       
-      /*fs.readFile(intcode, 'utf8', function(err, data){
-
-    if (err){ throw err; }
-    var lines = data.split('\n')
-    var type = lines[2]
-    type = type.replace("Content-Type: ","")
-    //log(type)
+     
     
-    lines = lines.slice(3).join('\n');
-    lines = lines.split("\n")
-    let i = 0
-    while (i < 6){
-      
-    lines.splice(-1)
-    i++
-    }
-    lines = lines.join('\n')
-    //console.log(lines)
-    /* fs.writeFileSync(intcode, lines); */
-    //fs.writeFileSync(intcode+".type",type)
-    
-console.log("File uploaded to "+"\x1b[32m"+intcode.replace("./data/keys/","")+"\x1b[37m" +" Type: " /*+ type*/)
+console.log("File uploaded to "+"\x1b[32m"+code+"\x1b[37m" +" Type: " + type)
     
 /*})*/;
 
