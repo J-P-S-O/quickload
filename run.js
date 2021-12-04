@@ -16,14 +16,21 @@ let path = require("path")
 
 
 
-    console.log("\x1b[31m WARNING: Folder \"data\" will be erased and rebuilt if you proceed \x1b[37m"
-    + "\n~Same will happen for all files in /static/ matching \x1b[34m *.upload.* \x1b[37m")
+    console.log("\x1b[31m WARNING: All files in /static/ matching \x1b[34m *.upload.* \x1b[31m will be removed \x1b[37m")
     
     const answer = prompt("Would you like to proceed? (S/N)")
     if (answer.toUpperCase() =="S"){
       //log("removing")
-      if(fs.existsSync("data")){
-      fs.rmdirSync("data",{recursive: true})
+      if(fs.existsSync("static")){
+        let filess = fs.readdirSync("./static")
+        for (file in filess){
+        
+          //console.log(String(filess[file]))
+          if (String(filess[file]).match(/\.*\.upload\.*/)){
+            console.log("Removing "+"\x1b[32m"+ String(filess[file]) + "\x1b[37m")
+             fs.unlinkSync(path.join(__dirname,"static", filess[file]))
+          }
+        }
       }
       console.log("Done!")
       console.log("Now we can start the HTTP server lol")
@@ -36,18 +43,7 @@ let path = require("path")
       process.exit(1)
     }
     
-let filess = fs.readdirSync("./static")
-for (file in filess){
 
-  //console.log(String(filess[file]))
-  if (String(filess[file]).match(/\.*\.upload\.*/)){
-    console.log("Removing "+"\x1b[32m"+ String(filess[file]) + "\x1b[37m")
-     fs.unlinkSync(path.join(__dirname,"static", filess[file]))
-  }
-}
-
-fs.mkdirSync("./data");
-fs.mkdirSync("./data/keys")
 
 const requestListener = function (req, res) {
   let intcode = "" + crypto.randomInt(999999);
