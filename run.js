@@ -30,7 +30,7 @@ let path = require("path")
             console.log("Removing "+"\x1b[32m"+ String(filess[file]) + "\x1b[37m")
              fs.unlinkSync(path.join(__dirname,"static", filess[file]))
           }
-        }
+        } 
       }
       console.log("Done!")
       console.log("Now we can start the HTTP server lol")
@@ -122,36 +122,33 @@ console.log("File uploaded to "+"\x1b[32m"+code+"\x1b[37m" +" Type: " + type)
     });
 
   } else if(String(req.url).startsWith("/download/") ){
-    //log(String(req.url).replace("/download/",""))
-    let pathh = (String(req.url).replace("/download/",""))
-    pathh = "./data/keys/" + pathh + ".type"
-    fs.readFile("./data/keys/" + String(req.url).replace("/download/",""), function (err,data) {
+    let number = String(req.url).replace("/download/","")
+    let filepath = new RegExp(number+"\.upload\."+"*")
+    let defpath = "undefined"
+    let files = fs.readdirSync("static")
+    console.log(filepath)
+    for (file in files){
+      console.log(files[file])
+      
+      if (String(files[file]).match(filepath)){
+        defpath = String(files[file])
+        console.log(defpath)
+      }
+    }
+    fs.readFile(defpath, function(err,data) {
       if (err) {
-        
-        if(err.code=="ENOENT"){
-          
-          fs.readFile("templates/404.html", function (err,data) {
-            if (err) {
-              res.writeHead(203);
-              res.end("<html><body><b>internal error</b></body></html>"+JSON.stringify(err));
-              return;
-            }
-            
+        if(err.code=="ENOENT"){   
             res.writeHead(404);
             res.end(data);
             return;
-          })
-          return;
-        }
-
+          }        
         res.writeHead(203);
         res.end(JSON.stringify(err));
         return;
       }
-      res.setHeader("Content-Type", pathh)
+      res.setHeader("Content-Type", "text/plain")
       res.writeHead(200);
-      
-      res.end(data);
+      res.end(defpath);
       console.log("File downloaded from "+"\x1b[32m"+String(req.url).replace("/download/","")+"\x1b[37m")
     });
   }else{

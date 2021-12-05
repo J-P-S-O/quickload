@@ -34,7 +34,16 @@ upbutton.onchange = function(e){
    
 }
 dbutton.onclick =function(){
-   window.location = "/download/"+codeplace.value
+   let xhr = new XMLHttpRequest()
+               xhr.open('GET', "/download/"+codeplace.value)
+              
+               xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+               xhr.send()
+               xhr.onload = () => {
+                  window.location = xhr.responseText;
+
+               }
+   
 }
 
 
