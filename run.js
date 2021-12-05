@@ -6,23 +6,32 @@ With love,
 */
 
 
-
+let mime = require('mime-types')
 let prompt = require("prompt-sync")()
 let fs = require("fs")
 let log = console.log;
 let http = require("http")
 let crypto = require("crypto")
-const { isText } = require('istextorbinary')
+let path = require("path")
 
 
 
-
-if (fs.existsSync("data")) { 
-    console.log("\x1b[31m WARNING: Folder \"data\" will be erased and rebuilt if you proceed \x1b[37m")
+    console.log("\x1b[31m WARNING: All files in /static/ matching \x1b[34m *.upload.* \x1b[31m will be removed \x1b[37m")
+    
     const answer = prompt("Would you like to proceed? (S/N)")
     if (answer.toUpperCase() =="S"){
-      log("removing")
-      fs.rmdirSync("data",{recursive: true})
+      //log("removing")
+      if(fs.existsSync("static")){
+        let filess = fs.readdirSync("./static")
+        for (file in filess){
+        
+          //console.log(String(filess[file]))
+          if (String(filess[file]).match(/\.*\.upload\.*/)){
+            console.log("Removing "+"\x1b[32m"+ String(filess[file]) + "\x1b[37m")
+             fs.unlinkSync(path.join(__dirname,"static", filess[file]))
+          }
+        } 
+      }
       console.log("Done!")
       console.log("Now we can start the HTTP server lol")
       
@@ -33,10 +42,8 @@ if (fs.existsSync("data")) {
       console.log("Not a valid answer. Exiting...")
       process.exit(1)
     }
-}
+    
 
-fs.mkdirSync("./data");
-fs.mkdirSync("./data/keys")
 
 const requestListener = function (req, res) {
   let intcode = "" + crypto.randomInt(999999);
@@ -86,34 +93,17 @@ const requestListener = function (req, res) {
     req.on("end",()=>{
       res.writeHead(200, { "Content-Type": "text/plain" });
       res.end("Success: your code is "+ intcode);
-      
-    
-      intcode = "./data/keys/" + intcode
+      //console.log(req.headers)
+      let type = req.headers["content-type"]
+      let ext = mime.extension(type)
+    let code = intcode
+      intcode = "./static/" + intcode+".upload."+ext
       fs.writeFileSync(intcode,body)
-    
+   
       
-      /*fs.readFile(intcode, 'utf8', function(err, data){
-
-    if (err){ throw err; }
-    var lines = data.split('\n')
-    var type = lines[2]
-    type = type.replace("Content-Type: ","")
-    //log(type)
+     
     
-    lines = lines.slice(3).join('\n');
-    lines = lines.split("\n")
-    let i = 0
-    while (i < 6){
-      
-    lines.splice(-1)
-    i++
-    }
-    lines = lines.join('\n')
-    //console.log(lines)
-    /* fs.writeFileSync(intcode, lines); */
-    //fs.writeFileSync(intcode+".type",type)
-    
-console.log("File uploaded to "+"\x1b[32m"+intcode.replace("./data/keys/","")+"\x1b[37m" +" Type: " /*+ type*/)
+console.log("File uploaded to "+"\x1b[32m"+code+"\x1b[37m" +" Type: " + type)
     
 /*})*/;
 
@@ -132,36 +122,33 @@ console.log("File uploaded to "+"\x1b[32m"+intcode.replace("./data/keys/","")+"\
     });
 
   } else if(String(req.url).startsWith("/download/") ){
-    //log(String(req.url).replace("/download/",""))
-    let pathh = (String(req.url).replace("/download/",""))
-    pathh = "./data/keys/" + pathh + ".type"
-    fs.readFile("./data/keys/" + String(req.url).replace("/download/",""), function (err,data) {
+    let number = String(req.url).replace("/download/","")
+    let filepath = new RegExp(number+"\.upload\."+"*")
+    let defpath = "undefined"
+    let files = fs.readdirSync("static")
+    console.log(filepath)
+    for (file in files){
+      console.log(files[file])
+      
+      if (String(files[file]).match(filepath)){
+        defpath = String(files[file])
+        console.log(defpath)
+      }
+    }
+    fs.readFile(defpath, function(err,data) {
       if (err) {
-        
-        if(err.code=="ENOENT"){
-          
-          fs.readFile("templates/404.html", function (err,data) {
-            if (err) {
-              res.writeHead(203);
-              res.end("<html><body><b>internal error</b></body></html>"+JSON.stringify(err));
-              return;
-            }
-            
+        if(err.code=="ENOENT"){   
             res.writeHead(404);
             res.end(data);
             return;
-          })
-          return;
-        }
-
+          }        
         res.writeHead(203);
         res.end(JSON.stringify(err));
         return;
       }
-      res.setHeader("Content-Type", pathh)
+      res.setHeader("Content-Type", "text/plain")
       res.writeHead(200);
-      
-      res.end(data);
+      res.end(defpath);
       console.log("File downloaded from "+"\x1b[32m"+String(req.url).replace("/download/","")+"\x1b[37m")
     });
   }else{
