@@ -40,6 +40,11 @@ dbutton.onclick =function(){
                xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
                xhr.send()
                xhr.onload = () => {
+                  console.log("Status: " +xhr.status)
+                  console.log("Response: "+xhr.response)
+                  console.log("ResponseText: "+xhr.responseText)
+                  console.log("Type: "+xhr.responseType)
+                  
                   window.location = xhr.responseText;
 
                }
