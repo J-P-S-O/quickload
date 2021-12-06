@@ -5,7 +5,7 @@ With love,
 - @J-P-S-O (Octopus)
 */
 
-
+console.clear()
 let mime = require('mime-types')
 let prompt = require("prompt-sync")()
 let fs = require("fs")
@@ -89,13 +89,14 @@ const requestListener = function (req, res) {
   }else if(String(req.url).split("?")[0]==="/upload"){
     console.log("[UPLOAD STARTED]")
     //console.log("upload")
-    let body = "";
+    let body = [];
     req.on("data",(chunk)=>{
       //console.log(String(chunk))
-      body += chunk
+      body.push(chunk)    
       
     })
     req.on("end",()=>{
+      body = Buffer.concat(body)
       res.writeHead(200, { "Content-Type": "text/plain" });
       res.end("Success: your code is "+ intcode);
       //console.log(req.headers)
