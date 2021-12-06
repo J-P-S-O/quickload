@@ -14,12 +14,12 @@ upbutton.onchange = function(e){
 
 				reader.onload = function(e) {
 					console.log(reader.result)
+               console.log(new Blob([reader.result]).size)
                console.log(file.type)
                console.log(file.name)
                let xhr = new XMLHttpRequest()
                xhr.open('POST', '/upload')
                xhr.setRequestHeader('Content-Type', file.type);
-               xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
                xhr.send(reader.result)
                xhr.onload = () => {
                   window.alert(xhr.responseText);
@@ -27,7 +27,8 @@ upbutton.onchange = function(e){
                }
 				}
 
-				reader.readAsBinaryString(file);	
+				//reader.readAsBinaryString(file);	
+            reader.readAsArrayBuffer(file);	
 
 			
 			
