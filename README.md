@@ -9,6 +9,7 @@ cd quickload
 npm i 
 node run.js
 ```
+Check some lines of `run.js`.
 
 
 After this, access https://localhost:80 (You can use ngrok to generate public URLs).
