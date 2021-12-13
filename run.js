@@ -5,6 +5,7 @@ With love,
 - @J-P-S-O (Octopus)
 */
 
+
 console.clear()
 let mime = require('mime-types')
 let prompt = require("prompt-sync")()
@@ -19,7 +20,7 @@ const { Console } = require('console');
 
     console.log("\x1b[31m WARNING: All files in /static/ matching \x1b[34m *.upload.* \x1b[31m will be removed \x1b[37m")
     
-    const answer = prompt("Would you like to proceed? (S/N)")
+    const answer = "S" || prompt("Would you like to proceed? (S/N)") //CHANGE THIS IF YOU DOWNLOAD
     if (answer.toUpperCase() =="S"){
       //log("removing")
       if(fs.existsSync("static")){
@@ -193,4 +194,5 @@ console.log("[UPLOAD ENDED]")
 
 const server = http.createServer(requestListener);
 log("Server created. Starting...")
-server.listen(80);
+server.listen(3000);
+ // CHANGE THE PORT ABOVE
