@@ -1,10 +1,10 @@
 /* 
-Code source: https://github.com/J-P-S-O/quickload
+Code source: https://github.com/Octalbyte/quickload
 THIS CODE IS EXPERIMENTAL AND HAS NO WARRANTS RELATED TO SAFETY AND RELIABILITY.
 With love,
-- @J-P-S-O (Octopus)
+- @Octalbyte
 */
-
+process.title = 'Quickload';
 console.clear()
 let mime = require('mime-types')
 let prompt = require("prompt-sync")()
